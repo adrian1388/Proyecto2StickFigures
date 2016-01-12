@@ -2,7 +2,7 @@
 <html xmlns="http://www.w3.org/1999/xhtml">
 <head>
 	<meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
-	<title>$1 Recognizer</title>
+	<title>Stick Figure - Gráficos por Computadora II</title>
 	<link href="styles.css" rel="stylesheet" type="text/css" />
 	<!--[if IE]><script src="excanvas.js"></script><![endif]-->
 	<script type="text/javascript" src="canvas.text.js"></script>
@@ -154,6 +154,84 @@
 			var num = _r.DeleteUserGestures(); // deletes any user-defined unistrokes
 			alert("All user-defined gestures have been deleted. Only the 1 predefined gesture remains for each of the " + num + " types.");
 		}
+		/* Gráficos: HM-ini */
+		function addTronco(){
+			mouseDownEvent(	 354, 100 	);
+			mouseMoveEvent(	 350, 112 	);
+			mouseMoveEvent(	 345, 129 	);
+			mouseMoveEvent(	 344, 133 	);
+			mouseMoveEvent(	 344, 137 	);
+			mouseMoveEvent(	 342, 139 	);
+			mouseMoveEvent(	 342, 148 	);
+			mouseMoveEvent(	 341, 154 	);
+			mouseMoveEvent(	 341, 157 	);
+			mouseMoveEvent(	 339, 163 	);
+			mouseMoveEvent(	 339, 168 	);
+			mouseMoveEvent(	 339, 171 	);
+			mouseMoveEvent(	 339, 176 	);
+			mouseMoveEvent(	 338, 177 	);
+			mouseMoveEvent(	 338, 181 	);
+			mouseMoveEvent(	 338, 184 	);
+			mouseMoveEvent(	 338, 188 	);
+			mouseMoveEvent(	 338, 190 	);
+			mouseMoveEvent(	 338, 194 	);
+			mouseMoveEvent(	 338, 195 	);
+			mouseMoveEvent(	 338, 198 	);
+			mouseMoveEvent(	 338, 201 	);
+			mouseMoveEvent(	 338, 205 	);
+			mouseMoveEvent(	 336, 209 	);
+			mouseMoveEvent(	 336, 210 	);
+			mouseMoveEvent(	 336, 215 	);
+			mouseMoveEvent(	 336, 221 	);
+			mouseMoveEvent(	 336, 225 	);
+			mouseMoveEvent(	 336, 232 	);
+			mouseMoveEvent(	 334, 237 	);
+			mouseMoveEvent(	 334, 243 	);
+			mouseMoveEvent(	 332, 251 	);
+			mouseMoveEvent(	 332, 255 	);
+			mouseMoveEvent(	 331, 261 	);
+			mouseMoveEvent(	 330, 264 	);
+			mouseMoveEvent(	 330, 268 	);
+			mouseMoveEvent(	 330, 272 	);
+			mouseMoveEvent(	 330, 278 	);
+			mouseMoveEvent(	 330, 281 	);
+			mouseMoveEvent(	 330, 284 	);
+			mouseMoveEvent(	 330, 289 	);
+			mouseMoveEvent(	 330, 294 	);
+			mouseMoveEvent(	 330, 302 	);
+			mouseMoveEvent(	 330, 305 	);
+			mouseMoveEvent(	 330, 306 	);
+			mouseMoveEvent(	 330, 308 	);
+			mouseMoveEvent(	 329, 311 	);
+			mouseMoveEvent(	 329, 314 	);
+			mouseMoveEvent(	 329, 315 	);
+			mouseMoveEvent(	 329, 316 	);
+			mouseMoveEvent(	 329, 318 	);
+			mouseMoveEvent(	 329, 319 	);
+			mouseMoveEvent(	 329, 320 	);
+			mouseMoveEvent(	 329, 323 	);
+			mouseMoveEvent(	 329, 324 	);
+			mouseMoveEvent(	 329, 326 	);
+			mouseMoveEvent(	 329, 327 	);
+			mouseMoveEvent(	 329, 328 	);
+			mouseMoveEvent(	 329, 329 	);
+			mouseMoveEvent(	 330, 331 	);
+			mouseMoveEvent(	 330, 332 	);
+			mouseMoveEvent(	 330, 333 	);
+			mouseMoveEvent(	 330, 335 	);
+			mouseMoveEvent(	 330, 336 	);
+			mouseMoveEvent(	 330, 337 	);
+			mouseMoveEvent(	 330, 338 	);
+			mouseMoveEvent(	 330, 339 	);
+			mouseMoveEvent(	 330, 341 	);
+			mouseMoveEvent(	 331, 342 	);
+			mouseMoveEvent(	 331, 343 	);
+			mouseUpEvent(	 339, 414	);
+
+			document.getElementById('custom').value = "tronco";
+			onClickCustom();
+			onClickAddCustom();
+		}
 	// -->
 	</script>
 	<style type="text/css">
@@ -162,7 +240,7 @@
 		}
 	</style>
 </head>
-<body onload="onLoadEvent()">
+<body onload="onLoadEvent(); addTronco();">
 	
 	<div id="Content">
 		
@@ -190,7 +268,7 @@
 						</canvas>
 
 						<!-- Editing area below stroking canvas area -->
-						<!-- <table border="0" width="420" style="font-size:10pt">
+						<table border="0" width="420" style="font-size:10pt">
 							<tr>
 								<td valign="top" align="left">Add as example of existing type:</td>
 								<td valign="top" align="right">
@@ -225,7 +303,8 @@
 								<td valign="top" align="right">&nbsp;</td>
 								<td valign="top" align="right"><input type="button" style="width:64px" value="Delete" onclick="onClickDelete()" /></td>
 							</tr>
-						</table> -->
+							
+						</table>
 						<!-- End of editing area below stroking canvas area -->
 					</div>
 			
