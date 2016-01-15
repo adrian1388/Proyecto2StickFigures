@@ -13,9 +13,14 @@
 		// Startup
 		//
 		var _isDown, _points, _r, _g, _rc;
+		var b_cabeza = false;
+		var b_tronco = false;
+		var objetoDibujado;
+		var i = 0;
 		function onLoadEvent()
 		{
 			_points = new Array();
+			objetoDibujado = new Array();
 			_r = new DollarRecognizer();
 
 			var canvas = document.getElementById('myCanvas');
@@ -63,17 +68,24 @@
 		//
 		function mouseDownEvent(x, y)
 		{
+			var miPunto = new Point();
 			document.onselectstart = function() { return false; } // disable drag-select
 			document.onmousedown = function() { return false; } // disable drag-select
 			_isDown = true;
 			x -= _rc.x;
 			y -= _rc.y - getScrollY();
-			if (_points.length > 0)
-				_g.clearRect(0, 0, _rc.width, _rc.height);
+			// if (_points.length > 0)
+			// 	_g.clearRect(0, 0, _rc.width, _rc.height);
+			
 			_points.length = 1; // clear
 			_points[0] = new Point(x, y);
 			drawText("Recording unistroke...");
-			_g.fillRect(x - 4, y - 3, 9, 9);
+			//_g.fillRect(x - 4, y - 3, 9, 9);
+
+			//document.getElementById('objetoDibujado').value = x + ", " + y;
+			document.getElementById('objetoDibujado').value = "new Point( " + x + ", " + y + ")";
+			objetoDibujado.length = 1;
+			objetoDibujado[0] = new Point(x,y);
 		}
 		function mouseMoveEvent(x, y)
 		{
@@ -82,7 +94,11 @@
 				x -= _rc.x;
 				y -= _rc.y - getScrollY();
 				_points[_points.length] = new Point(x, y); // append
+				coloRear("rgb(0,0,255)",3);
 				drawConnectedPoint(_points.length - 2, _points.length - 1);
+				//document.getElementById('objetoDibujado').value = document.getElementById('objetoDibujado').value + " - " + x + ", " + y;
+				objetoDibujaPuntos(x,y);
+				objetoDibujado.push(new Point(x,y));
 			}
 		}
 		function mouseUpEvent(x, y)
@@ -91,17 +107,65 @@
 			document.onmousedown = function() { return true; } // enable drag-select
 			if (_isDown)
 			{
+				x -= _rc.x;
+				y -= _rc.y - getScrollY();
 				_isDown = false;
 				if (_points.length >= 10)
 				{
 					var result = _r.Recognize(_points, document.getElementById('useProtractor').checked);
-					drawText("Result: " + result.Name + " (" + round(result.Score,2) + ").");
+					if (result.Score > 4.0){
+						//drawText("Result: " + result.Name + " (" + round(result.Score,2) + ").");
+						drawText("Result: " + result.Name);
+						if (result.Name == "cabeza") {
+							b_cabeza = true;
+						} else if (result.Name == "tronco") {
+							b_tronco = true;
+						}
+						objetoDibujado.length = 0;
+					}
+					else{
+						drawText("Result: Trazo no reconocido. ¡Inténtalo de nuevo!");
+
+						b_cabeza = false;
+						b_tronco = false;
+
+						coloRear("#dddddd",5);
+						for ( i = 0; objetoDibujado.length; i++) {
+							drawTrazo(i, i+1);
+						}
+
+						document.getElementById('objetoDibujado').value = "";
+						objetoDibujado.length = 0;
+					}
+					
 				}
 				else // fewer than 10 points were inputted
 				{
 					drawText("Too few points made. Please try again.");
 				}
 			}
+		}
+		/* Gráficos: HM-ini */
+		function drawTrazo(desde, hasta)
+		{
+			
+			_g.beginPath();
+			_g.moveTo(objetoDibujado[desde].X, objetoDibujado[desde].Y);
+			_g.lineTo(objetoDibujado[hasta].X, objetoDibujado[hasta].Y);
+			_g.closePath();
+			_g.stroke();
+		}
+		function coloRear(miColor,miAnchoLinea){
+			_g.strokeStyle = miColor;
+			_g.lineWidth = miAnchoLinea;
+		}
+		function onClickLimpiar()
+		{
+			_g.clearRect(0, 0, _rc.width, _rc.height);
+		}
+		function objetoDibujaPuntos(x,y){
+			new Point(	 354, 100 	),
+			document.getElementById('objetoDibujado').value = document.getElementById('objetoDibujado').value + ", new Point( " + x + ", " + y + ")";
 		}
 		function drawText(str)
 		{
@@ -112,6 +176,9 @@
 		}
 		function drawConnectedPoint(from, to)
 		{
+			_g.strokeStyle = "rgb(0,0,255)";
+			_g.lineWidth = 3;
+			_g.stroke();
 			_g.beginPath();
 			_g.moveTo(_points[from].X, _points[from].Y);
 			_g.lineTo(_points[to].X, _points[to].Y);
@@ -154,85 +221,8 @@
 			var num = _r.DeleteUserGestures(); // deletes any user-defined unistrokes
 			alert("All user-defined gestures have been deleted. Only the 1 predefined gesture remains for each of the " + num + " types.");
 		}
-		/* Gráficos: HM-ini */
-		function addTronco(){
-			mouseDownEvent(	 354, 100 	);
-			mouseMoveEvent(	 350, 112 	);
-			mouseMoveEvent(	 345, 129 	);
-			mouseMoveEvent(	 344, 133 	);
-			mouseMoveEvent(	 344, 137 	);
-			mouseMoveEvent(	 342, 139 	);
-			mouseMoveEvent(	 342, 148 	);
-			mouseMoveEvent(	 341, 154 	);
-			mouseMoveEvent(	 341, 157 	);
-			mouseMoveEvent(	 339, 163 	);
-			mouseMoveEvent(	 339, 168 	);
-			mouseMoveEvent(	 339, 171 	);
-			mouseMoveEvent(	 339, 176 	);
-			mouseMoveEvent(	 338, 177 	);
-			mouseMoveEvent(	 338, 181 	);
-			mouseMoveEvent(	 338, 184 	);
-			mouseMoveEvent(	 338, 188 	);
-			mouseMoveEvent(	 338, 190 	);
-			mouseMoveEvent(	 338, 194 	);
-			mouseMoveEvent(	 338, 195 	);
-			mouseMoveEvent(	 338, 198 	);
-			mouseMoveEvent(	 338, 201 	);
-			mouseMoveEvent(	 338, 205 	);
-			mouseMoveEvent(	 336, 209 	);
-			mouseMoveEvent(	 336, 210 	);
-			mouseMoveEvent(	 336, 215 	);
-			mouseMoveEvent(	 336, 221 	);
-			mouseMoveEvent(	 336, 225 	);
-			mouseMoveEvent(	 336, 232 	);
-			mouseMoveEvent(	 334, 237 	);
-			mouseMoveEvent(	 334, 243 	);
-			mouseMoveEvent(	 332, 251 	);
-			mouseMoveEvent(	 332, 255 	);
-			mouseMoveEvent(	 331, 261 	);
-			mouseMoveEvent(	 330, 264 	);
-			mouseMoveEvent(	 330, 268 	);
-			mouseMoveEvent(	 330, 272 	);
-			mouseMoveEvent(	 330, 278 	);
-			mouseMoveEvent(	 330, 281 	);
-			mouseMoveEvent(	 330, 284 	);
-			mouseMoveEvent(	 330, 289 	);
-			mouseMoveEvent(	 330, 294 	);
-			mouseMoveEvent(	 330, 302 	);
-			mouseMoveEvent(	 330, 305 	);
-			mouseMoveEvent(	 330, 306 	);
-			mouseMoveEvent(	 330, 308 	);
-			mouseMoveEvent(	 329, 311 	);
-			mouseMoveEvent(	 329, 314 	);
-			mouseMoveEvent(	 329, 315 	);
-			mouseMoveEvent(	 329, 316 	);
-			mouseMoveEvent(	 329, 318 	);
-			mouseMoveEvent(	 329, 319 	);
-			mouseMoveEvent(	 329, 320 	);
-			mouseMoveEvent(	 329, 323 	);
-			mouseMoveEvent(	 329, 324 	);
-			mouseMoveEvent(	 329, 326 	);
-			mouseMoveEvent(	 329, 327 	);
-			mouseMoveEvent(	 329, 328 	);
-			mouseMoveEvent(	 329, 329 	);
-			mouseMoveEvent(	 330, 331 	);
-			mouseMoveEvent(	 330, 332 	);
-			mouseMoveEvent(	 330, 333 	);
-			mouseMoveEvent(	 330, 335 	);
-			mouseMoveEvent(	 330, 336 	);
-			mouseMoveEvent(	 330, 337 	);
-			mouseMoveEvent(	 330, 338 	);
-			mouseMoveEvent(	 330, 339 	);
-			mouseMoveEvent(	 330, 341 	);
-			mouseMoveEvent(	 331, 342 	);
-			mouseMoveEvent(	 331, 343 	);
-			mouseUpEvent(	 339, 414	);
-
-			document.getElementById('custom').value = "tronco";
-			onClickCustom();
-			onClickAddCustom();
-		}
-	// -->
+		
+		
 	</script>
 	<style type="text/css">
 		.seleccionProtactor{
@@ -240,7 +230,7 @@
 		}
 	</style>
 </head>
-<body onload="onLoadEvent(); addTronco();">
+<body onload="onLoadEvent(); ">
 	
 	<div id="Content">
 		
@@ -303,7 +293,10 @@
 								<td valign="top" align="right">&nbsp;</td>
 								<td valign="top" align="right"><input type="button" style="width:64px" value="Delete" onclick="onClickDelete()" /></td>
 							</tr>
-							
+							<tr>
+								<input type="button" style="width:64px" value="LIMPIAR" onclick="onClickLimpiar()" />
+								<input id="objetoDibujado"></input>
+							</tr>
 						</table>
 						<!-- End of editing area below stroking canvas area -->
 					</div>
