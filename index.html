@@ -126,17 +126,9 @@
 						drawText("Result: " + result.Name);
 						if (result.Name == "cabeza") {
 							b_cabeza = true;
-							//cabeza = objetoDibujado;
-							coloRear("rgb(255,0,0)",3);
-							for ( i = 0; objetoDibujado.length; i++) {
-								drawTrazo(i, i+1);
-								cabeza[i] = objetoDibujado[i];
-							}
-						} else if (result.Name == "tronco") {
-							b_tronco = true;
-							tronco = objetoDibujado;
-
-							if (b_cabeza){
+							bandTronCab = false;
+							if (b_tronco){
+								cabeza = objetoDibujado;
 								i=0;
 								do{
 									var dist = Distance( tronco[0], cabeza[i] );
@@ -148,12 +140,56 @@
 									i++;
 								}while( bandTronCab == false && i < tronco.length );
 							}
+							else{
+								coloRear("rgb(255,0,0)",3);
+								for ( i = 0; objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+									cabeza[i] = objetoDibujado[i];
+								}
+							}
+							if (bandTronCab){
+								coloRear("rgb(255,0,0)",3);
+								for ( i = 0; objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+							}else{
+								tronco.length = 0;
+								coloRear("#dddddd",5);
+								for ( i = 0; objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+							}
+							
+						} else if (result.Name == "tronco") {
+							b_tronco = true;
+							bandTronCab = false;
+							if (b_cabeza){
+								tronco = objetoDibujado;
+								i=0;
+								do{
+									var dist = Distance( tronco[0], cabeza[i] );
+									if( dist < 20 ){
+										bandTronCab = true;
+									}else{
+										bandTronCab = false;
+									}
+									i++;
+								}while( bandTronCab == false && i < tronco.length );
+							}
+							else{
+								coloRear("rgb(0,0,255)",3);
+								for ( i = 0; objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+									tronco[i] = objetoDibujado[i];
+								}
+							}
 							if (bandTronCab){
 								coloRear("rgb(0,0,255)",3);
 								for ( i = 0; objetoDibujado.length; i++) {
 									drawTrazo(i, i+1);
 								}
 							}else{
+								tronco.length = 0;
 								coloRear("#dddddd",5);
 								for ( i = 0; objetoDibujado.length; i++) {
 									drawTrazo(i, i+1);
