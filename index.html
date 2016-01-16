@@ -16,11 +16,18 @@
 		var b_cabeza = false;
 		var b_tronco = false;
 		var objetoDibujado;
+		var cabeza,tronco,brazoIzq,brazoDer,piernaIzq,piernaDer;
 		var i = 0;
 		function onLoadEvent()
 		{
 			_points = new Array();
 			objetoDibujado = new Array();
+			cabeza = new Array();
+			tronco = new Array();
+			brazoIzq = new Array();
+			brazoDer = new Array();
+			piernaIzq = new Array();
+			piernaDer = new Array();
 			_r = new DollarRecognizer();
 
 			var canvas = document.getElementById('myCanvas');
@@ -94,7 +101,7 @@
 				x -= _rc.x;
 				y -= _rc.y - getScrollY();
 				_points[_points.length] = new Point(x, y); // append
-				coloRear("rgb(0,0,255)",3);
+				coloRear("rgb(0,0,2)",3);
 				drawConnectedPoint(_points.length - 2, _points.length - 1);
 				//document.getElementById('objetoDibujado').value = document.getElementById('objetoDibujado').value + " - " + x + ", " + y;
 				objetoDibujaPuntos(x,y);
@@ -103,6 +110,7 @@
 		}
 		function mouseUpEvent(x, y)
 		{
+			var bandTronCab = false;
 			document.onselectstart = function() { return true; } // enable drag-select
 			document.onmousedown = function() { return true; } // enable drag-select
 			if (_isDown)
@@ -118,8 +126,40 @@
 						drawText("Result: " + result.Name);
 						if (result.Name == "cabeza") {
 							b_cabeza = true;
+							//cabeza = objetoDibujado;
+							coloRear("rgb(255,0,0)",3);
+							for ( i = 0; objetoDibujado.length; i++) {
+								drawTrazo(i, i+1);
+								cabeza[i] = objetoDibujado[i];
+							}
 						} else if (result.Name == "tronco") {
 							b_tronco = true;
+							tronco = objetoDibujado;
+
+							if (b_cabeza){
+								i=0;
+								do{
+									var dist = Distance( tronco[0], cabeza[i] );
+									if( dist < 20 ){
+										bandTronCab = true;
+									}else{
+										bandTronCab = false;
+									}
+									i++;
+								}while( bandTronCab == false && i < tronco.length );
+							}
+							if (bandTronCab){
+								coloRear("rgb(0,0,255)",3);
+								for ( i = 0; objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+							}else{
+								coloRear("#dddddd",5);
+								for ( i = 0; objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+							}
+							
 						}
 						objetoDibujado.length = 0;
 					}
@@ -142,6 +182,10 @@
 				else // fewer than 10 points were inputted
 				{
 					drawText("Too few points made. Please try again.");
+					coloRear("#dddddd",5);
+					for ( i = 0; objetoDibujado.length; i++) {
+						drawTrazo(i, i+1);
+					}
 				}
 			}
 		}
@@ -162,9 +206,13 @@
 		function onClickLimpiar()
 		{
 			_g.clearRect(0, 0, _rc.width, _rc.height);
+			b_cabeza = false;
+			b_tronco = false;
+			cabeza.length = 0;
+			tronco.length = 0;
+
 		}
 		function objetoDibujaPuntos(x,y){
-			new Point(	 354, 100 	),
 			document.getElementById('objetoDibujado').value = document.getElementById('objetoDibujado').value + ", new Point( " + x + ", " + y + ")";
 		}
 		function drawText(str)
@@ -176,8 +224,6 @@
 		}
 		function drawConnectedPoint(from, to)
 		{
-			_g.strokeStyle = "rgb(0,0,255)";
-			_g.lineWidth = 3;
 			_g.stroke();
 			_g.beginPath();
 			_g.moveTo(_points[from].X, _points[from].Y);
