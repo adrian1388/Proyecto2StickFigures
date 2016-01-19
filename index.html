@@ -111,6 +111,9 @@
 		function mouseUpEvent(x, y)
 		{
 			var bandTronCab = false;
+			var bandBrazo = false;
+			var bandPierna = false;
+			
 			document.onselectstart = function() { return true; } // enable drag-select
 			document.onmousedown = function() { return true; } // enable drag-select
 			if (_isDown)
@@ -122,13 +125,15 @@
 				{
 					var result = _r.Recognize(_points, document.getElementById('useProtractor').checked);
 					if (result.Score > 4.0){
-						//drawText("Result: " + result.Name + " (" + round(result.Score,2) + ").");
-						drawText("Result: " + result.Name);
+						drawText("Result: " + result.Name + " (" + round(result.Score,2) + ").");
+						//drawText("Result: " + result.Name);
 						if (result.Name == "cabeza") {
 							b_cabeza = true;
 							bandTronCab = false;
 							if (b_tronco){
-								cabeza = objetoDibujado;
+								for ( i = 0; i < objetoDibujado.length; i++) {
+									cabeza[i] = objetoDibujado[i];
+								}
 								i=0;
 								do{
 									var dist = Distance( tronco[0], cabeza[i] );
@@ -142,20 +147,20 @@
 							}
 							else{
 								coloRear("rgb(255,0,0)",3);
-								for ( i = 0; objetoDibujado.length; i++) {
+								for ( i = 0; i < objetoDibujado.length; i++) {
 									drawTrazo(i, i+1);
 									cabeza[i] = objetoDibujado[i];
 								}
 							}
 							if (bandTronCab){
 								coloRear("rgb(255,0,0)",3);
-								for ( i = 0; objetoDibujado.length; i++) {
+								for ( i = 0; i < objetoDibujado.length; i++) {
 									drawTrazo(i, i+1);
 								}
 							}else{
 								tronco.length = 0;
 								coloRear("#dddddd",5);
-								for ( i = 0; objetoDibujado.length; i++) {
+								for ( i = 0; i < objetoDibujado.length; i++) {
 									drawTrazo(i, i+1);
 								}
 							}
@@ -164,7 +169,9 @@
 							b_tronco = true;
 							bandTronCab = false;
 							if (b_cabeza){
-								tronco = objetoDibujado;
+								for ( i = 0; i < objetoDibujado.length; i++) {
+									tronco[i] = objetoDibujado[i];
+								}
 								i=0;
 								do{
 									var dist = Distance( tronco[0], cabeza[i] );
@@ -178,35 +185,86 @@
 							}
 							else{
 								coloRear("rgb(0,0,255)",3);
-								for ( i = 0; objetoDibujado.length; i++) {
+								for ( i = 0; i < objetoDibujado.length; i++) {
 									drawTrazo(i, i+1);
 									tronco[i] = objetoDibujado[i];
 								}
 							}
 							if (bandTronCab){
 								coloRear("rgb(0,0,255)",3);
-								for ( i = 0; objetoDibujado.length; i++) {
+								for ( i = 0; i < objetoDibujado.length; i++) {
 									drawTrazo(i, i+1);
 								}
 							}else{
 								tronco.length = 0;
 								coloRear("#dddddd",5);
-								for ( i = 0; objetoDibujado.length; i++) {
+								for ( i = 0; i < objetoDibujado.length; i++) {
 									drawTrazo(i, i+1);
 								}
 							}
 							
+						} else if (result.Name == "brazo") {
+							var brazo = objetoDibujado;
+							var dist = Distance( tronco[0], brazo[0] );
+							if( dist < 30 ){
+								bandBrazo = true;
+							}else{
+								bandBrazo = false;
+							}
+							if (brazo[0].X < tronco[0].X && bandBrazo){
+								brazoIzq = brazo;
+								coloRear("rgb(0,255,0)",3);
+								for ( i = 0; i < objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+							} else if (brazo[0].X >= tronco[0].X && bandBrazo){
+								brazoDer = brazo;
+								coloRear("rgb(255,128,0)",3);
+								for ( i = 0; i < objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+							} else if ( !bandBrazo ) {
+								coloRear("#dddddd",5);
+								for ( i = 0; i < objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+								brazo.length = 0;
+							}
+						} else if (result.Name == "pierna") {
+							var pierna = objetoDibujado;
+							var dist = Distance( tronco[tronco.length - 1], pierna[0] );
+							if( dist < 30 ){
+								bandPierna = true;
+							}else{
+								bandPierna = false;
+							}
+							if (pierna[0].X < tronco[tronco.length - 1].X && bandPierna){
+								piernaIzq = pierna;
+								coloRear("rgb(102,51,0)",3);
+								for ( i = 0; i < objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+							} else if (pierna[0].X >= tronco[tronco.length - 1].X && bandPierna){
+								piernaDer = pierna;
+								coloRear("rgb(102,0,204)",3);
+								for ( i = 0; i < objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+							} else if ( !bandPierna ) {
+								coloRear("#dddddd",5);
+								for ( i = 0; i < objetoDibujado.length; i++) {
+									drawTrazo(i, i+1);
+								}
+								pierna.length = 0;
+							}
 						}
 						objetoDibujado.length = 0;
 					}
 					else{
 						drawText("Result: Trazo no reconocido. ¡Inténtalo de nuevo!");
 
-						b_cabeza = false;
-						b_tronco = false;
-
 						coloRear("#dddddd",5);
-						for ( i = 0; objetoDibujado.length; i++) {
+						for ( i = 0; i < objetoDibujado.length; i++) {
 							drawTrazo(i, i+1);
 						}
 
@@ -219,7 +277,7 @@
 				{
 					drawText("Too few points made. Please try again.");
 					coloRear("#dddddd",5);
-					for ( i = 0; objetoDibujado.length; i++) {
+					for ( i = 0; i < objetoDibujado.length; i++) {
 						drawTrazo(i, i+1);
 					}
 				}
@@ -340,7 +398,7 @@
 						</canvas>
 
 						<!-- Editing area below stroking canvas area -->
-						<table border="0" width="420" style="font-size:10pt">
+						<!-- <table border="0" width="420" style="font-size:10pt">
 							<tr>
 								<td valign="top" align="left">Add as example of existing type:</td>
 								<td valign="top" align="right">
@@ -376,10 +434,13 @@
 								<td valign="top" align="right"><input type="button" style="width:64px" value="Delete" onclick="onClickDelete()" /></td>
 							</tr>
 							<tr>
-								<input type="button" style="width:64px" value="LIMPIAR" onclick="onClickLimpiar()" />
-								<input id="objetoDibujado"></input>
+								
 							</tr>
-						</table>
+						</table> -->
+						<div>
+							<input type="button" style="width:64px" value="LIMPIAR" onclick="onClickLimpiar()" />
+							<input id="objetoDibujado"></input>
+						</div>
 						<!-- End of editing area below stroking canvas area -->
 					</div>
 			
